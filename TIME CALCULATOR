@@ -1,0 +1,67 @@
+def time_calculator(start,duration,day_of_week =False):
+    
+    days_of_week_dict = {'monday':0, 'tuesday':1, 'wednesday':2, 'thursday':3, 'friday':4, 'saturday':5, 'sunday':6}
+    days_of_week_list = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    
+    n_start = start.split()      #this is the start time
+    hour_min = n_start[0].split(':')     #this is the breakdown of hours and minutes
+    n_duration = duration.split(':')
+    total_hour = int(hour_min[0]) + int(n_duration[0])
+    d = int(n_duration[0])
+    total_min = int(hour_min[1]) + int(n_duration[1])
+    am_pm_dict = {"AM":"PM", "PM":"AM"}
+    am_pm = n_start[1]
+    
+    hour_handle = total_hour
+    min_handle = total_min
+    amount_of_days = int(d/24)
+    a = int(hour_min[0])
+    c = int(n_duration[0])
+   
+    
+    #this is how to make sure that minutes don't exceed 60
+    if total_min >= 60 :
+        hour_handle = total_hour + 1
+        min_handle = total_min - 60
+        a += 1
+    if min_handle < 10:
+        min_handle = "0" + str(min_handle)
+   #The clock is supposed to be a 12 hour clock.
+    # in order not to have something like 13 o clock this is what we need to do
+    check_spill = hour_handle % 12 #this is the time we are to display
+    if check_spill == 0:
+        check_spill = 12
+    amount_flip = int(hour_handle/12)
+    b = amount_flip % 2
+        #this is the breakdown of how to convert between AM and PM
+   
+    if am_pm == 'PM' and int(a) + int(c%12) >= 12 :
+        amount_of_days += 1
+    if am_pm == 'PM' and a == 10 and c == 13:
+        amount_of_days += 1
+    elif am_pm == 'PM' and a == 10 and c == 12:
+        amount_of_days +=1
+    am_pm = am_pm_dict[am_pm] if amount_flip % 2 == 1 else am_pm
+    #if b == 1 and n_start[1] == 'PM':
+       # n_start[1] = 'AM' 
+    #elif b == 1 and n_start[1] == 'AM':
+        #n_start[1] = 'PM'
+    #elif b == 0 and n_start[1] == 'PM':
+        #n_start[1] = 'PM'
+    #elif b == 0 and n_start[1] == 'AM':
+       # n_start[1] = 'AM'
+    returnTime = str(check_spill) + ':' + str(min_handle) + " " + am_pm
+    if(day_of_week):
+        day_of_week =  day_of_week.lower()
+        index = int(days_of_week_dict[day_of_week] + amount_of_days ) % 7
+        new_day = days_of_week_list[index]
+        returnTime += " " + new_day
+    if amount_of_days == 1:
+        return returnTime + ' ' + "next day"
+    elif amount_of_days > 1:
+        return returnTime + " " +  '(' + str(amount_of_days)  + 'days later)'
+    return returnTime
+    #print(check_spill,min_handle, am_pm, hour_handle,b,amount_of_days, new_day,)
+    
+
+    
